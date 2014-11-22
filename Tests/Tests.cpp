@@ -14,8 +14,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "TokenizerTests.h"
+#include "ParserTests.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TokenizerTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(ParserTest);
 
 int _tmain(int argc, _TCHAR* argv[])
 {

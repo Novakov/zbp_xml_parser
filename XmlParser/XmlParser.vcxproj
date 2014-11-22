@@ -71,12 +71,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\dom.h" />
+    <ClInclude Include="include\parser.h" />
     <ClInclude Include="include\tokenizer.h" />
     <ClInclude Include="include\tokens.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\tokenizer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

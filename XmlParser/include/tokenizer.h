@@ -1,6 +1,8 @@
 #include <istream>
 #include <memory>
 
+#pragma once
+
 class Token;
 
 class Tokenizer
