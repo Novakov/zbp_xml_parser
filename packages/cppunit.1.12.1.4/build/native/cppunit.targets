@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="cppunit_init_targets_0;cppunit_init_targets_1">
+  <PropertyGroup Label="Default initializers for properties">
+    <Linkages-cppunit Condition="'$(Linkages-cppunit)' == ''">dynamic</Linkages-cppunit>
+    <CallingConventions-cppunit Condition="'$(CallingConventions-cppunit)' == ''">cdecl</CallingConventions-cppunit>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../../build/native/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../../build/native/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="v120 and Win32 and Debug" Condition="( '$(PlatformToolset.ToLower())' == 'v120' Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And '$(Platform.ToLower())' == 'win32' And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../../build/native/lib/v120/Win32/Debug/cppunitd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="v110 and Win32 and Debug" Condition="( '$(PlatformToolset.ToLower())' == 'v110' Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And '$(Platform.ToLower())' == 'win32' And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../../build/native/lib/v110/Win32/Debug/cppunitd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="v110 and Win32 and Release" Condition="( '$(PlatformToolset.ToLower())' == 'v110' Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And '$(Platform.ToLower())' == 'win32' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../../build/native/lib/v110/Win32/Release/cppunit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="v120 and Win32 and Release" Condition="( '$(PlatformToolset.ToLower())' == 'v120' Or '$(PlatformToolset.ToLower())' == 'windowskernelmodedriver8.0' Or '$(PlatformToolset.ToLower())' == 'windowsapplicationfordrivers8.0' Or '$(PlatformToolset.ToLower())' == 'windowsusermodedriver8.0' ) And '$(Platform.ToLower())' == 'win32' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../../build/native/lib/v120/Win32/Release/cppunit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Target Name="cppunit_AfterBuild" AfterTargets="AfterBuild">
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(CopyToOutput)" UseHardlinksIfPossible="true" DestinationFolder="$(TargetDir)">
+      <Output TaskParameter="DestinationFiles" PropertyName="DestinationFiles" />
+      <Output TaskParameter="DestinationFiles" ItemName="DestinationFiles" />
+      <Output TaskParameter="CopiedFiles" PropertyName="CopiedFiles" />
+      <Output TaskParameter="CopiedFiles" ItemName="CopiedFiles" />
+    </Copy>
+  </Target>
+  <Target Name="cppunit_BeforeLink" AfterTargets="BeforeLink">
+    <CheckRuntimeLibrary RuntimeLibrary="%(ClCompile.RuntimeLibrary)" ExpectedRuntimeLibrary="none" LibraryName="cppunit" />
+  </Target>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\default-propertiesui.xml" />
+  </ItemGroup>
+  <UsingTask TaskName="NuGetPackageOverlay" AssemblyFile="$(NuGet-NativeExtensionPath)\coapp.NuGetNativeMSBuildTasks.dll" Condition="'$(DesignTimeBuild)' != 'true' AND ('$(NugetMsBuildExtensionLoaded)' == '' OR '$(NugetMsBuildExtensionLoaded)' == 'false')" />
+  <UsingTask TaskName="CheckRuntimeLibrary" AssemblyFile="$(NuGet-NativeExtensionPath)\coapp.NuGetNativeMSBuildTasks.dll" Condition="'$(DesignTimeBuild)' != 'true' AND ('$(NugetMsBuildExtensionLoaded)' == '' OR '$(NugetMsBuildExtensionLoaded)' == 'false')" />
+  <UsingTask TaskName="StringContains" AssemblyFile="$(NuGet-NativeExtensionPath)\coapp.NuGetNativeMSBuildTasks.dll" Condition="'$(DesignTimeBuild)' != 'true' AND ('$(NugetMsBuildExtensionLoaded)' == '' OR '$(NugetMsBuildExtensionLoaded)' == 'false')" />
+  <Target Name="cppunit_init_targets_0">
+    <Copy SkipUnchangedFiles="true" SourceFiles="$(NuGet-NativeExtensionPath)\coapp.NuGetNativeMSBuildTasks.dll.orig" DestinationFiles="$(NuGet-NativeExtensionPath)\coapp.NuGetNativeMSBuildTasks.dll" />
+    <PropertyGroup>
+      <NugetMsBuildExtensionLoaded Condition="'$(NugetMsBuildExtensionLoaded)' == '' OR '$(NuGet-OverlayLoaded)' == 'false'">true</NugetMsBuildExtensionLoaded>
+    </PropertyGroup>
+  </Target>
+  <Target Name="cppunit_init_targets_1">
+    <StringContains Text="Linkages-dynamic" Library="cppunit" Value="dynamic" Condition="'$(Linkages-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkages-cppunit" />
+    </StringContains>
+    <StringContains Text="Linkages-static" Library="cppunit" Value="static" Condition="'$(Linkages-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkages-cppunit" />
+    </StringContains>
+    <StringContains Text="Linkages-ltcg" Library="cppunit" Value="ltcg" Condition="'$(Linkages-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkages-cppunit" />
+    </StringContains>
+    <StringContains Text="Linkages-sxs" Library="cppunit" Value="sxs" Condition="'$(Linkages-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkages-cppunit" />
+    </StringContains>
+    <StringContains Text="CallingConventions-cdecl" Library="cppunit" Value="cdecl" Condition="'$(CallingConventions-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConventions-cppunit" />
+    </StringContains>
+    <StringContains Text="CallingConventions-stdcall" Library="cppunit" Value="stdcall" Condition="'$(CallingConventions-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConventions-cppunit" />
+    </StringContains>
+    <StringContains Text="CallingConventions-fastcall" Library="cppunit" Value="fastcall" Condition="'$(CallingConventions-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConventions-cppunit" />
+    </StringContains>
+    <StringContains Text="CallingConventions-thiscall" Library="cppunit" Value="thiscall" Condition="'$(CallingConventions-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConventions-cppunit" />
+    </StringContains>
+    <StringContains Text="CallingConventions-clrcall" Library="cppunit" Value="clrcall" Condition="'$(CallingConventions-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConventions-cppunit" />
+    </StringContains>
+    <StringContains Text="CallingConventions-vectorcall" Library="cppunit" Value="vectorcall" Condition="'$(CallingConventions-cppunit)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConventions-cppunit" />
+    </StringContains>
+  </Target>
+</Project>
