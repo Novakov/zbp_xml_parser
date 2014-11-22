@@ -5,44 +5,50 @@
 
 using namespace std;
 
-void Tokenizer::process(istream &input)
+void Tokenizer::processFrom(istream * input)
 {
+	this->input = input;
+}
+
+bool Tokenizer::endOfInput()
+{
+	this->input->peek();
+	return this->input->eof();
+}
+
+Token * Tokenizer::nextToken()
+{	
 	char c;
-	input >> c;
+	*this->input >> c;
 
-	while (!input.eof())
-	{				
-		switch (c)
+	switch (c)
+	{
+	case '<':
+		return new TagStartToken();
+		break;
+	case '>':
+		return new TagEndToken();			
+	case '/':
+		return new EndTagMarkToken();		
+	default:
+		if (this->isNameChar(c))
 		{
-		case '<':			
-			this->listener->handle(make_shared<TagStartToken>());
-			input >> c;
-			break;
-		case '>':
-			this->listener->handle(make_shared<TagEndToken>());
-			input >> c;
-			break;
-		case '/':
-			this->listener->handle(make_shared<EndTagMarkToken>());
-			input >> c;
-			break;
-		default:
-			if (this->isNameChar(c))
+			string name;
+
+			name += c;
+
+			while (!this->input->eof() && this->isNameChar(this->input->peek()))
 			{
-				string name;
-
-				while (this->isNameChar(c))
-				{
-					name += c;
-
-					input >> c;
-				}
-
-				this->listener->handle(make_shared<NameToken>(name));
+				*this->input >> c;
+				name += c;				
 			}
-		}		
+
+			return new NameToken(name);
+		}
 	}
 }
+
+
 
 bool Tokenizer::isNameChar(char c)
 {

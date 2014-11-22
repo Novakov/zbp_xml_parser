@@ -13,47 +13,37 @@
 
 using namespace std;
 
-class BufferingTokenListener : public TokenListener
-{
-private:
-	vector<shared_ptr<Token>> _tokens;
-public:
-	void handle(shared_ptr<Token> token)
-	{
-		this->_tokens.push_back(token);
-	}
-
-	vector<shared_ptr<Token>>& tokens()
-	{
-		return this->_tokens;
-	}
-};
-
 class TokenizerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(TokenizerTest);
 	CPPUNIT_TEST(ShouldTokenizeSingleElementWithNoContent);
+	CPPUNIT_TEST(ShouldReturnNoTokensForEmptyString);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
+	vector<Token*> tokens;
 	Tokenizer * tokenizer;
-	BufferingTokenListener * tokenBuffer;
 
 	void tokenize(string input)
 	{
 		stringstream stream(input);
 
-		this->tokenizer->process(stream);
+		this->tokenizer->processFrom(&stream);		
+
+		while (!this->tokenizer->endOfInput())
+		{			
+			auto token = this->tokenizer->nextToken();
+			this->tokens.push_back(token);
+		}
 	}
 public:
 	void setUp()
-	{
-		this->tokenBuffer = new BufferingTokenListener();
-		this->tokenizer = new Tokenizer(this->tokenBuffer);
+	{		
+		this->tokenizer = new Tokenizer();
+		this->tokens.clear();
 	}
 
 	void tearDown()
-	{
-		delete this->tokenBuffer;
+	{		
 		delete this->tokenizer;
 	}
 
@@ -66,18 +56,30 @@ public:
 		tokenize(s);
 
 		// assert		
-		CPPUNIT_ASSERT_EQUAL(7, (int)this->tokenBuffer->tokens().size());
+		CPPUNIT_ASSERT_EQUAL(7, (int)this->tokens.size());
 	
-		CPPUNIT_ASSERT_EQUAL(T_TAG_START, this->tokenBuffer->tokens().at(0)->type());
-		CPPUNIT_ASSERT_EQUAL(T_NAME, this->tokenBuffer->tokens().at(1)->type());
-		CPPUNIT_ASSERT_EQUAL(string("element"), dynamic_cast<NameToken*>(this->tokenBuffer->tokens().at(1).get())->name());
-		CPPUNIT_ASSERT_EQUAL(T_TAG_END, this->tokenBuffer->tokens().at(2)->type());
+		CPPUNIT_ASSERT_EQUAL(T_TAG_START, this->tokens.at(0)->type());
+		CPPUNIT_ASSERT_EQUAL(T_NAME, this->tokens.at(1)->type());
+		CPPUNIT_ASSERT_EQUAL(string("element"), dynamic_cast<NameToken*>(this->tokens.at(1))->name());
+		CPPUNIT_ASSERT_EQUAL(T_TAG_END, this->tokens.at(2)->type());
 		
-		CPPUNIT_ASSERT_EQUAL(T_TAG_START, this->tokenBuffer->tokens().at(3)->type());
-		CPPUNIT_ASSERT_EQUAL(T_END_TAG_MARK, this->tokenBuffer->tokens().at(4)->type());
-		CPPUNIT_ASSERT_EQUAL(T_NAME, this->tokenBuffer->tokens().at(5)->type());
-		CPPUNIT_ASSERT_EQUAL(string("element"), dynamic_cast<NameToken*>(this->tokenBuffer->tokens().at(5).get())->name());
-		CPPUNIT_ASSERT_EQUAL(T_TAG_END, this->tokenBuffer->tokens().at(6)->type());
+		CPPUNIT_ASSERT_EQUAL(T_TAG_START, this->tokens.at(3)->type());
+		CPPUNIT_ASSERT_EQUAL(T_END_TAG_MARK, this->tokens.at(4)->type());
+		CPPUNIT_ASSERT_EQUAL(T_NAME, this->tokens.at(5)->type());
+		CPPUNIT_ASSERT_EQUAL(string("element"), dynamic_cast<NameToken*>(this->tokens.at(5))->name());
+		CPPUNIT_ASSERT_EQUAL(T_TAG_END, this->tokens.at(6)->type());
+	}
+
+	virtual void ShouldReturnNoTokensForEmptyString()
+	{
+		// arrange
+		string s = "";
+
+		// act
+		tokenize(s);
+
+		// assert
+		CPPUNIT_ASSERT_EQUAL(0, (int)this->tokens.size());
 	}
 };
 

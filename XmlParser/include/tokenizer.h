@@ -3,25 +3,16 @@
 
 class Token;
 
-class TokenListener;
-
 class Tokenizer
 {
 private:
-	TokenListener *listener;
+	std::istream * input;
 
 	bool isNameChar(char c);
 public:
-	Tokenizer(TokenListener *listener) : listener(listener)
-	{}
+	void processFrom(std::istream * input);
 
-	void process(std::istream &input);
-};
+	bool endOfInput();
 
-
-
-class TokenListener
-{
-public:
-	virtual void handle(std::shared_ptr<Token> token) = 0;
+	Token * nextToken();
 };
