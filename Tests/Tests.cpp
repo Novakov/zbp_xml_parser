@@ -13,9 +13,9 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "Test1.h"
+#include "TokenizerTests.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION(Test1);
+CPPUNIT_TEST_SUITE_REGISTRATION(TokenizerTest);
 
 int _tmain(int argc, _TCHAR* argv[])
 {
