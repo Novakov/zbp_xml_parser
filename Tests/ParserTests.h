@@ -13,8 +13,10 @@
 using namespace std;
 
 class ParserTest : public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(ParserTest);	
+	CPPUNIT_TEST_SUITE(ParserTest);
 	CPPUNIT_TEST(ShouldParseSingleElementWithNoContent);
+	CPPUNIT_TEST(ShouldParseSingleElementWithTwoNestedElements);
+	CPPUNIT_TEST(ShouldParseThreeLevelStructure);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -47,5 +49,37 @@ public:
 
 		// assert
 		CPPUNIT_ASSERT_EQUAL((string)"element", result->name());
+	}
+
+	virtual void ShouldParseSingleElementWithTwoNestedElements()
+	{
+		// arrange
+		string input = "<root><a></a><b></b></root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
+		CPPUNIT_ASSERT_EQUAL(2, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
+		CPPUNIT_ASSERT_EQUAL((string)"b", result->child(1)->name());
+	}
+
+	virtual void ShouldParseThreeLevelStructure()
+	{
+		// arrange
+		string input = "<root><a></a><b><c></c></b><d></d></root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
+		CPPUNIT_ASSERT_EQUAL(3, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
+		CPPUNIT_ASSERT_EQUAL((string)"b", result->child(1)->name());
+		CPPUNIT_ASSERT_EQUAL((string)"d", result->child(2)->name());
+		CPPUNIT_ASSERT_EQUAL((string)"c", result->child(1)->child(0)->name());
 	}
 };
