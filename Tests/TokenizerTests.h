@@ -17,6 +17,9 @@ class TokenizerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(TokenizerTest);
 	CPPUNIT_TEST(ShouldTokenizeSingleElementWithNoContent);
 	CPPUNIT_TEST(ShouldReturnNoTokensForEmptyString);
+	CPPUNIT_TEST(ShouldIgnoreNewLineInInputString);
+	CPPUNIT_TEST(ShouldIgnoreSpaceInInputString);	
+	CPPUNIT_TEST(ShouldIgnoreTabulatorInInputstring);	
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -80,6 +83,48 @@ public:
 
 		// assert
 		CPPUNIT_ASSERT_EQUAL(0, (int)this->tokens.size());
+	}
+
+	virtual void ShouldIgnoreNewLineInInputString()
+	{
+		TestSingleElementWithSeperatorInside("\n");
+	}
+
+	virtual void ShouldIgnoreSpaceInInputString()
+	{
+		TestSingleElementWithSeperatorInside(" ");
+	}
+
+	virtual void ShouldIgnoreTabulatorInInputstring()
+	{
+		TestSingleElementWithSeperatorInside("\t");
+	}
+
+	virtual void TestSingleElementWithSeperatorInside(string separator)
+	{
+		// arrange
+		string s = "<element>" + separator + "</element>";
+
+		// act
+		tokenize(s);
+
+		// assert
+		CPPUNIT_ASSERT_EQUAL(7, (int)this->tokens.size());
+		CPPUNIT_ASSERT_EQUAL(TokenType::T_TAG_START, this->tokens.at(0)->type());
+
+		CPPUNIT_ASSERT_EQUAL(TokenType::T_NAME, this->tokens.at(1)->type());
+		CPPUNIT_ASSERT_EQUAL((string)"element", dynamic_cast<NameToken*>(this->tokens.at(1))->name());
+
+		CPPUNIT_ASSERT_EQUAL(TokenType::T_TAG_END, this->tokens.at(2)->type());
+
+		CPPUNIT_ASSERT_EQUAL(TokenType::T_TAG_START, this->tokens.at(3)->type());
+
+		CPPUNIT_ASSERT_EQUAL(TokenType::T_END_TAG_MARK, this->tokens.at(4)->type());
+
+		CPPUNIT_ASSERT_EQUAL(TokenType::T_NAME, this->tokens.at(5)->type());
+		CPPUNIT_ASSERT_EQUAL((string)"element", dynamic_cast<NameToken*>(this->tokens.at(5))->name());
+
+		CPPUNIT_ASSERT_EQUAL(TokenType::T_TAG_END, this->tokens.at(6)->type());
 	}
 };
 
