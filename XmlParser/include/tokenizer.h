@@ -9,12 +9,16 @@ class Tokenizer
 {
 private:
 	std::istream * input;
+	Token * currentToken;
 
 	bool isNameChar(char c);
+	Token * decodeToken();
 public:
 	void processFrom(std::istream * input);
 
 	bool endOfInput();
 
-	Token * nextToken();
+	Token * current() { return this->currentToken; };
+
+	bool nextToken();
 };

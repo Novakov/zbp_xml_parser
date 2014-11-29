@@ -14,9 +14,9 @@ class ValidatingTokenizer : public Tokenizer
 {
 public:
 	template<typename TToken>
-	TToken* nextToken()
+	TToken* current()
 	{
-		auto fetchedToken = Tokenizer::nextToken();
+		auto fetchedToken = Tokenizer::current();
 		if (fetchedToken == NULL)
 		{
 			throw no_token_exception();
@@ -33,6 +33,29 @@ public:
 	};
 };
 
+class ComposingTokenizer 
+{
+private:
+	ValidatingTokenizer tokenizer;
+public:
+	void processFrom(istream * stream)
+	{
+		tokenizer.processFrom(stream);
+	}
+
+	bool endOfInput()
+	{
+		return this->endOfInput();
+	}
+
+	Token * nextToken();
+};
+
+Token * ComposingTokenizer::nextToken()
+{
+	return nullptr;
+}
+
 shared_ptr<Element> Parser::parse(istream * input)
 {
 	ValidatingTokenizer tokenizer;
@@ -41,9 +64,14 @@ shared_ptr<Element> Parser::parse(istream * input)
 	
 	tokenizer.processFrom(input);
 
-	tokenizer.nextToken<TagStartToken>();
-	auto name = tokenizer.nextToken<NameToken>();
-	tokenizer.nextToken<TagEndToken>();
+	tokenizer.nextToken();
+	tokenizer.current<TagStartToken>();
+	
+	tokenizer.nextToken();
+	auto name = tokenizer.current<NameToken>();
+
+	tokenizer.nextToken();
+	tokenizer.current<TagEndToken>();
 
 	auto element = make_shared<Element>(name->name());
 
@@ -51,14 +79,21 @@ shared_ptr<Element> Parser::parse(istream * input)
 
 	while (!tokenizer.endOfInput())
 	{
-		tokenizer.nextToken<TagStartToken>();
-		auto token = tokenizer.nextToken<Token>();
+		tokenizer.nextToken();
+		tokenizer.current<TagStartToken>();
+		
+		tokenizer.nextToken();
+		auto token = tokenizer.current<Token>();
 
 		switch (token->type())
 		{
 		case TokenType::T_END_TAG_MARK:
-			tokenizer.nextToken<NameToken>();
-			tokenizer.nextToken<TagEndToken>();
+			tokenizer.nextToken();
+			tokenizer.current<NameToken>();
+			
+			tokenizer.nextToken();
+			tokenizer.current<TagEndToken>();
+
 			elements.pop();
 			break;
 		case TokenType::T_NAME:
@@ -66,7 +101,8 @@ shared_ptr<Element> Parser::parse(istream * input)
 			elements.top()->addChild(childElement);
 			elements.push(childElement);
 
-			tokenizer.nextToken<TagEndToken>();
+			tokenizer.nextToken();
+			tokenizer.current<TagEndToken>();
 
 			break;
 		}

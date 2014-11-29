@@ -32,9 +32,9 @@ private:
 
 		this->tokenizer->processFrom(&stream);		
 
-		while (!this->tokenizer->endOfInput())
+		while (!this->tokenizer->endOfInput() && this->tokenizer->nextToken())
 		{			
-			auto token = this->tokenizer->nextToken();
+			auto token = this->tokenizer->current();
 			this->tokens.push_back(token);
 		}
 	}

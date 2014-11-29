@@ -16,7 +16,7 @@ bool Tokenizer::endOfInput()
 	return this->input->eof();
 }
 
-Token * Tokenizer::nextToken()
+Token * Tokenizer::decodeToken()
 {	
 	char c;
 	*this->input >> c;
@@ -48,7 +48,12 @@ Token * Tokenizer::nextToken()
 	}
 }
 
+bool Tokenizer::nextToken()
+{
+	this->currentToken = this->decodeToken();
 
+	return this->currentToken != nullptr;
+}
 
 bool Tokenizer::isNameChar(char c)
 {
