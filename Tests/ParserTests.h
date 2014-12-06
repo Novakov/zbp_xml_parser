@@ -22,6 +22,8 @@ class ParserTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(ShouldParseElementsWithMixedFullAndSelfClosedElements);
 	CPPUNIT_TEST(ShouldParseElementWithOneAttribute);
 	CPPUNIT_TEST(ShouldParseElementWithThreeAttributes);
+	CPPUNIT_TEST(ShouldParseSelfClosingElementWithOneAttribute);
+	CPPUNIT_TEST(ShouldParseSelfClosingElementWithThreeAttributes);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -157,6 +159,38 @@ public:
 	{
 		// arrange
 		string input = "<root attr1=\"value 1\" attr2=\"value 2\" attr3=\"value 3\"></root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT(result != nullptr);
+		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
+		CPPUNIT_ASSERT_EQUAL(3, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((string)"value 1", result->attribute("attr1"));
+		CPPUNIT_ASSERT_EQUAL((string)"value 2", result->attribute("attr2"));
+		CPPUNIT_ASSERT_EQUAL((string)"value 3", result->attribute("attr3"));
+	}
+
+	virtual void ShouldParseSelfClosingElementWithOneAttribute()
+	{
+		// arrange
+		string input = "<root attribute=\"value with spaces\"/>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT(result != nullptr);
+		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
+		CPPUNIT_ASSERT_EQUAL(1, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((string)"value with spaces", result->attribute("attribute"));
+	}
+
+	virtual void ShouldParseSelfClosingElementWithThreeAttributes()
+	{
+		// arrange
+		string input = "<root attr1=\"value 1\" attr2=\"value 2\" attr3=\"value 3\" />";
 
 		// act
 		auto result = parse(input);

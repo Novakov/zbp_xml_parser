@@ -234,6 +234,18 @@ private:
 
 		*result = make_shared<Element>(tagName);
 
+		skipWhiteSpace();
+
+		pair<string, string> attribute;
+
+		while (test(&XmlGrammar::attribute, &attribute))
+		{
+			(*result)->setAttribute(attribute.first, attribute.second);
+
+			if (!skipWhiteSpace(true))
+				break;
+		}
+
 		if (!parseChar('/'))
 			return false;
 		if (!parseChar('>'))
