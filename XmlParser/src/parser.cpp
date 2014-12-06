@@ -1,136 +1,181 @@
 #include "stdafx.h"
 
-#include <stack>
-
 #include "parser.h"
-#include "tokenizer.h"
-#include "tokens.h"
-
 
 using namespace std;
 
-
-class ValidatingTokenizer : public Tokenizer
+class Tokenizer
 {
+private:
+	istream& input;
 public:
-	template<typename TToken>
-	TToken* current()
+	Tokenizer(istream& input) : input(input){}
+
+	char peek() { return this->input.peek(); }
+	void next() { this->input.get(); }
+
+	int position() { return this->input.tellg(); }
+	void rewind(int position) { this->input.seekg(position); }
+
+	bool eof()
 	{
-		auto fetchedToken = Tokenizer::current();
-		if (fetchedToken == NULL)
-		{
-			throw no_token_exception();
-		}
-		
-		auto castedToken = dynamic_cast<TToken*>(fetchedToken);
-
-		if (castedToken == NULL)
-		{
-			throw invalid_token_exception();
-		}
-
-		return castedToken;
-	};
+		char c = this->input.peek();
+		return c == EOF;
+	}
 };
 
-//class ComposingTokenizer 
-//{
-//private:
-//	ValidatingTokenizer tokenizer;
-//
-//	Token * currentToken;
-//	Token * decodeStartTag();
-//public:
-//	void processFrom(istream * stream)
-//	{
-//		tokenizer.processFrom(stream);
-//	}
-//
-//	bool endOfInput()
-//	{
-//		return this->endOfInput();
-//	}
-//
-//	Token * nextToken();
-//};
-//
-//Token * ComposingTokenizer::decodeStartTag()
-//{
-//	this->tokenizer.nextToken();
-//
-//	auto name = this->tokenizer.current<NameToken>()->name();
-//
-//	while (this->tokenizer.current<Token>()->type() != TokenType::T_TAG_END)
-//	{
-//		this->tokenizer.nextToken();
-//	}
-//
-//	return new OpeningTagToken(name);
-//}
-//
-//bool ComposingTokenizer::nextToken()
-//{
-//	this->tokenizer.nextToken();
-//
-//	if (this->tokenizer.current<Token>()->type() == TokenType::T_TAG_START)
-//	{
-//		this->currentToken = this->decodeStartTag();
-//	}
-//
-//	return false;
-//}
-
-shared_ptr<Element> Parser::parse(istream * input)
+template<class TGrammar, class TRootResult>
+class Grammar
 {
-	ValidatingTokenizer tokenizer;
-	
-	stack<shared_ptr<Element>> elements;
-	
-	tokenizer.processFrom(input);
+private:
+	Tokenizer * tokenizer;
 
-	tokenizer.nextToken();
-	tokenizer.current<TagStartToken>();
-	
-	tokenizer.nextToken();
-	auto name = tokenizer.current<NameToken>();
+protected:
+	char peek() { return this->tokenizer->peek(); }
+	void next() { this->tokenizer->next(); }
 
-	tokenizer.nextToken();
-	tokenizer.current<TagEndToken>();
-
-	auto element = make_shared<Element>(name->name());
-
-	elements.push(element);
-
-	while (!tokenizer.endOfInput())
+	virtual bool root(char c, TRootResult * result) = 0;
+	template<class TResult>
+	bool test(bool (TGrammar::*function)(char c, TResult * result), TResult * result)
 	{
-		tokenizer.nextToken();
-		tokenizer.current<TagStartToken>();
-		
-		tokenizer.nextToken();
-		auto token = tokenizer.current<Token>();
+		auto pos = this->tokenizer->position();
 
-		switch (token->type())
+		auto gram = (TGrammar*)this;
+
+		auto hasMatch = (gram->*function)(this->peek(), result);
+
+		if (!hasMatch)
 		{
-		case TokenType::T_END_TAG_MARK:
-			tokenizer.nextToken();
-			tokenizer.current<NameToken>();
-			
-			tokenizer.nextToken();
-			tokenizer.current<TagEndToken>();
-
-			elements.pop();
-			break;
-		case TokenType::T_NAME:
-			auto childElement = make_shared<Element>(dynamic_cast<NameToken*>(token)->name());
-			elements.top()->addChild(childElement);
-			elements.push(childElement);
-
-			tokenizer.nextToken();
-			tokenizer.current<TagEndToken>();
-
-			break;
+			this->tokenizer->rewind(pos);
 		}
-	}	
 
-	return element;
+		return hasMatch;
+	}
+public:
+	bool Grammar::isValid(istream &input, TRootResult * result)
+	{
+		this->tokenizer = new Tokenizer(input);
+
+		auto c = this->tokenizer->peek();
+
+		if (this->test(&Grammar::root, result))
+		{
+			return this->tokenizer->eof();
+		}
+
+		return false;
+	}
+};
+
+class XmlGrammar : public Grammar < XmlGrammar, shared_ptr<Element> >
+{
+private:
+	bool name(char c, string * s)
+	{
+		*s = "";
+		while ('a' <= c && c <= 'z')
+		{
+			*s += c;
+			this->next();
+			c = this->peek();
+		}
+
+		return s->length() > 0;
+	}
+
+	bool openTag(char c, void * dummy)
+	{
+		if (c == '<')
+		{
+			this->next();
+			return true;
+		}
+
+		return false;
+	}
+
+	bool closeTag(char c, void * dummy)
+	{
+		if (c == '>')
+		{
+			this->next();
+			return true;
+		}
+
+		return false;
+	}
+
+	bool tagCloseMark(char c, void * dummy)
+	{
+		if (c == '/')
+		{
+			this->next();
+			return true;
+		}
+
+		return false;
+	}
+
+	bool startTag(char c, string * tagName)
+	{
+		if (!test(&XmlGrammar::openTag, (void*)nullptr))
+			return false;
+
+		if (!test(&XmlGrammar::name, tagName))
+			return false;
+
+		if (!test(&XmlGrammar::closeTag, (void*)nullptr))
+			return false;
+
+		return true;
+	}
+
+	bool endTag(char c, string * tagName)
+	{
+		if (!test(&XmlGrammar::openTag, (void*)nullptr))
+			return false;
+
+		if (!test(&XmlGrammar::tagCloseMark, (void*)nullptr))
+			return false;
+
+		if (!test(&XmlGrammar::name, tagName))
+			return false;
+
+		if (!test(&XmlGrammar::closeTag, (void*)nullptr))
+			return false;
+
+		return true;
+	}
+
+	bool element(char c, shared_ptr<Element> * result)
+	{
+		string tagName;
+
+		if (!test(&XmlGrammar::startTag, &tagName))		
+			return false;		
+
+		*result = make_shared<Element>(tagName);
+
+		if (!test(&XmlGrammar::endTag, &tagName))
+			return false;
+
+		return true;
+	}
+
+protected:
+	bool root(char c, shared_ptr<Element> * result) { return this->element(c, result); }
+};
+
+std::shared_ptr<Element> Parser::parse(std::istream * input)
+{
+	shared_ptr<Element> result = nullptr;
+
+	XmlGrammar grammar;
+
+	if (grammar.isValid(*input, &result))
+	{		
+		return result;
+	}
+
+	return nullptr;
 }

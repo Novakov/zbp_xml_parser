@@ -48,6 +48,7 @@ public:
 		auto result = parse(input);
 
 		// assert
+		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"element", result->name());
 	}
 
@@ -60,6 +61,7 @@ public:
 		auto result = parse(input);
 
 		// assert
+		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
 		CPPUNIT_ASSERT_EQUAL(2, result->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
@@ -75,6 +77,7 @@ public:
 		auto result = parse(input);
 
 		// assert
+		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
 		CPPUNIT_ASSERT_EQUAL(3, result->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
