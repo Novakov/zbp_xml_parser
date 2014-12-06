@@ -33,28 +33,52 @@ public:
 	};
 };
 
-class ComposingTokenizer 
-{
-private:
-	ValidatingTokenizer tokenizer;
-public:
-	void processFrom(istream * stream)
-	{
-		tokenizer.processFrom(stream);
-	}
-
-	bool endOfInput()
-	{
-		return this->endOfInput();
-	}
-
-	Token * nextToken();
-};
-
-Token * ComposingTokenizer::nextToken()
-{
-	return nullptr;
-}
+//class ComposingTokenizer 
+//{
+//private:
+//	ValidatingTokenizer tokenizer;
+//
+//	Token * currentToken;
+//	Token * decodeStartTag();
+//public:
+//	void processFrom(istream * stream)
+//	{
+//		tokenizer.processFrom(stream);
+//	}
+//
+//	bool endOfInput()
+//	{
+//		return this->endOfInput();
+//	}
+//
+//	Token * nextToken();
+//};
+//
+//Token * ComposingTokenizer::decodeStartTag()
+//{
+//	this->tokenizer.nextToken();
+//
+//	auto name = this->tokenizer.current<NameToken>()->name();
+//
+//	while (this->tokenizer.current<Token>()->type() != TokenType::T_TAG_END)
+//	{
+//		this->tokenizer.nextToken();
+//	}
+//
+//	return new OpeningTagToken(name);
+//}
+//
+//bool ComposingTokenizer::nextToken()
+//{
+//	this->tokenizer.nextToken();
+//
+//	if (this->tokenizer.current<Token>()->type() == TokenType::T_TAG_START)
+//	{
+//		this->currentToken = this->decodeStartTag();
+//	}
+//
+//	return false;
+//}
 
 shared_ptr<Element> Parser::parse(istream * input)
 {

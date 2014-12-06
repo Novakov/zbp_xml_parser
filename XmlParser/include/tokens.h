@@ -3,7 +3,8 @@
 
 enum TokenType
 {
-	T_TAG_START, T_NAME, T_TAG_END, T_END_TAG_MARK
+	T_TAG_START, T_NAME, T_TAG_END, T_END_TAG_MARK,
+	T_OPENING_TAG
 };
 
 class Token
@@ -34,6 +35,16 @@ private:
 	std::string _name;
 public:
 	NameToken(const std::string name) :_name(name){}
+
+	const std::string name() { return this->_name; }
+};
+
+class OpeningTagToken : public BaseToken < T_OPENING_TAG >
+{
+private:
+	std::string _name;
+public:
+	OpeningTagToken(const std:: string name) : _name(name){}
 
 	const std::string name() { return this->_name; }
 };
