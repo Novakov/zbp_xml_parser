@@ -50,3 +50,13 @@ Element::ChildrenIterator Element::childrenEnd()
 {
 	return this->children.end();
 }
+
+Element::AttributesIterator Element::attributesBegin()
+{
+	return this->attributes.begin();
+}
+
+Element::AttributesIterator Element::attributesEnd()
+{
+	return this->attributes.end();
+}

@@ -12,6 +12,7 @@ private:
 	std::map<std::string, std::string> attributes;
 public:
 	typedef std::vector<std::shared_ptr<Element>>::iterator ChildrenIterator;
+	typedef std::map<std::string, std::string>::iterator AttributesIterator;
 
 	std::string content;
 
@@ -32,5 +33,8 @@ public:
 	
 	Element::ChildrenIterator childrenBegin();
 	Element::ChildrenIterator childrenEnd();
+
+	Element::AttributesIterator attributesBegin();
+	Element::AttributesIterator attributesEnd();
 };
 

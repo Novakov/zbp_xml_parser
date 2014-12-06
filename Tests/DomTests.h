@@ -15,6 +15,7 @@ class DomTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(DomTest);
 	CPPUNIT_TEST(ShouldIterateOverAllChildren);
+	CPPUNIT_TEST(ShouldIterateOverAllAttributes);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -29,6 +30,10 @@ public:
 		root->addChild(child_1 = Element::create("child_1"));
 		root->addChild(child_2 = Element::create("child_2"));
 		root->addChild(child_3 = Element::create("child_3"));
+
+		root->setAttribute("a1", "v1");
+		root->setAttribute("a2", "v2");
+		root->setAttribute("a3", "v3");
 	}
 
 	virtual void ShouldIterateOverAllChildren()
@@ -48,5 +53,27 @@ public:
 		it++;
 
 		CPPUNIT_ASSERT(root->childrenEnd() == it);
+	}
+
+	virtual void ShouldIterateOverAllAttributes()
+	{
+		// arrange
+
+		// act & assert		
+		auto it = root->attributesBegin();
+
+		CPPUNIT_ASSERT_EQUAL((string)"a1", it->first);
+		CPPUNIT_ASSERT_EQUAL((string)"v1", it->second);
+		it++;
+
+		CPPUNIT_ASSERT_EQUAL((string)"a2", it->first);
+		CPPUNIT_ASSERT_EQUAL((string)"v2", it->second);
+		it++;
+
+		CPPUNIT_ASSERT_EQUAL((string)"a3", it->first);
+		CPPUNIT_ASSERT_EQUAL((string)"v3", it->second);
+		it++;
+
+		CPPUNIT_ASSERT(root->attributesEnd() == it);
 	}
 };
