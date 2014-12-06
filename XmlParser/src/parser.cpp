@@ -156,6 +156,12 @@ private:
 
 		*result = make_shared<Element>(tagName);
 
+		shared_ptr<Element> child = nullptr;
+		while (test(&XmlGrammar::element, &child))
+		{
+			(*result)->addChild(child);
+		}
+
 		if (!test(&XmlGrammar::endTag, &tagName))
 			return false;
 

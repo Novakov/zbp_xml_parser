@@ -15,6 +15,7 @@ using namespace std;
 class ParserTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ParserTest);
 	CPPUNIT_TEST(ShouldParseSingleElementWithNoContent);
+	CPPUNIT_TEST(ShouldParseSingleElementWithOneNestedElement);
 	CPPUNIT_TEST(ShouldParseSingleElementWithTwoNestedElements);
 	CPPUNIT_TEST(ShouldParseThreeLevelStructure);
 	CPPUNIT_TEST_SUITE_END();
@@ -50,6 +51,21 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"element", result->name());
+	}
+	
+	virtual void ShouldParseSingleElementWithOneNestedElement()
+	{
+		// arrange
+		string input = "<root><a></a></root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT(result != nullptr);
+		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
+		CPPUNIT_ASSERT_EQUAL(1, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());		
 	}
 
 	virtual void ShouldParseSingleElementWithTwoNestedElements()
