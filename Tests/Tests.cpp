@@ -14,8 +14,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "ParserTests.h"
+#include "DomTests.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ParserTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(DomTest);
 
 int _tmain(int argc, _TCHAR* argv[])
 {

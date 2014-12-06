@@ -5,6 +5,11 @@
 
 using namespace std;
 
+shared_ptr<Element> Element::create(string name)
+{
+	return make_shared<Element>(name);
+}
+
 void Element::addChild(shared_ptr<Element> child)
 {
 	this->children.push_back(child);
@@ -34,4 +39,14 @@ string Element::attribute(string name)
 void Element::setAttribute(std::string name, std::string value)
 {
 	this->attributes[name] = value;
+}
+
+Element::ChildrenIterator Element::childrenBegin()
+{
+	return this->children.begin();
+}
+
+Element::ChildrenIterator Element::childrenEnd()
+{
+	return this->children.end();
 }

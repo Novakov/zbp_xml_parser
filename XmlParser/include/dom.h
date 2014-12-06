@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <map>
 #include <vector>
@@ -9,10 +11,14 @@ private:
 	std::vector<std::shared_ptr<Element>> children;
 	std::map<std::string, std::string> attributes;
 public:
+	typedef std::vector<std::shared_ptr<Element>>::iterator ChildrenIterator;
+
 	std::string content;
 
 	Element(const std::string name) : _name(name)
 	{}
+
+	static std::shared_ptr<Element> create(std::string name);
 
 	std::string name() { return this->_name; }
 
@@ -23,4 +29,8 @@ public:
 	void setAttribute(std::string name, std::string value);
 	int attributeCount();
 	std::string attribute(std::string name);	
+	
+	Element::ChildrenIterator childrenBegin();
+	Element::ChildrenIterator childrenEnd();
 };
+
