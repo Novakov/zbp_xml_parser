@@ -21,9 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TokenizerTests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ParserTests.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -21,12 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Tokenizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\tokens.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tokenizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\parser.cpp">
