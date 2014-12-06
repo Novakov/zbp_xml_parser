@@ -124,7 +124,7 @@ private:
 		return true;
 	}
 
-	bool element(char c, shared_ptr<Element> * result)
+	bool fullElement(char c, shared_ptr<Element> * result)
 	{
 		string tagName;
 
@@ -143,6 +143,42 @@ private:
 			return false;
 
 		return true;
+	}
+
+	bool selfClosedElement(char c, shared_ptr<Element> * result)
+	{
+		if (!parseChar('<')) 
+			return false;
+
+		string tagName = "";
+
+		if (!test(&XmlGrammar::name, &tagName))
+			return false;
+
+		*result = make_shared<Element>(tagName);
+
+		if (!parseChar('/'))
+			return false;
+		if (!parseChar('>'))
+			return false;
+	}
+
+	bool element(char c, shared_ptr<Element> * result)
+	{
+		shared_ptr<Element> el = nullptr;
+		if (test(&XmlGrammar::fullElement, &el))
+		{
+			*result = el;
+			return true;
+		}
+
+		if (test(&XmlGrammar::selfClosedElement, &el))
+		{
+			*result = el;
+			return true;
+		}
+
+		return false;
 	}
 
 protected:
