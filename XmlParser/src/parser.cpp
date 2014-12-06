@@ -51,6 +51,16 @@ protected:
 
 		return hasMatch;
 	}
+
+	bool parseChar(char c)
+	{
+		if (this->peek() == c)
+		{
+			this->next();
+			return true;
+		}
+		return false;
+	}
 public:
 	bool Grammar::isValid(istream &input, TRootResult * result)
 	{
@@ -83,48 +93,15 @@ private:
 		return s->length() > 0;
 	}
 
-	bool openTag(char c, void * dummy)
-	{
-		if (c == '<')
-		{
-			this->next();
-			return true;
-		}
-
-		return false;
-	}
-
-	bool closeTag(char c, void * dummy)
-	{
-		if (c == '>')
-		{
-			this->next();
-			return true;
-		}
-
-		return false;
-	}
-
-	bool tagCloseMark(char c, void * dummy)
-	{
-		if (c == '/')
-		{
-			this->next();
-			return true;
-		}
-
-		return false;
-	}
-
 	bool startTag(char c, string * tagName)
 	{
-		if (!test(&XmlGrammar::openTag, (void*)nullptr))
+		if (!parseChar('<'))
 			return false;
 
 		if (!test(&XmlGrammar::name, tagName))
 			return false;
 
-		if (!test(&XmlGrammar::closeTag, (void*)nullptr))
+		if (!parseChar('>'))
 			return false;
 
 		return true;
@@ -132,16 +109,16 @@ private:
 
 	bool endTag(char c, string * tagName)
 	{
-		if (!test(&XmlGrammar::openTag, (void*)nullptr))
+		if (!parseChar('<'))
 			return false;
 
-		if (!test(&XmlGrammar::tagCloseMark, (void*)nullptr))
+		if (!parseChar('/'))
 			return false;
 
 		if (!test(&XmlGrammar::name, tagName))
 			return false;
 
-		if (!test(&XmlGrammar::closeTag, (void*)nullptr))
+		if (!parseChar('>'))
 			return false;
 
 		return true;
