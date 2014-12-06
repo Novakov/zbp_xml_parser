@@ -66,7 +66,7 @@ protected:
 	{
 		char c = this->peek();
 
-		while (c == ' ')
+		while (c == ' ' || c == '\n')
 		{
 			required = false;
 
@@ -290,12 +290,18 @@ private:
 		if (test(&XmlGrammar::fullElement, &el))
 		{
 			*result = el;
+
+			skipWhiteSpace();
+
 			return true;
 		}
 
 		if (test(&XmlGrammar::selfClosedElement, &el))
 		{
 			*result = el;
+
+			skipWhiteSpace();
+
 			return true;
 		}
 

@@ -15,9 +15,11 @@
 
 #include "ParserTests.h"
 #include "DomTests.h"
+#include "Dogfooding.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ParserTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(DomTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(Dogfooding);
 
 int _tmain(int argc, _TCHAR* argv[])
 {
