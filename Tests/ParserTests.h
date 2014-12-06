@@ -24,6 +24,8 @@ class ParserTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(ShouldParseElementWithThreeAttributes);
 	CPPUNIT_TEST(ShouldParseSelfClosingElementWithOneAttribute);
 	CPPUNIT_TEST(ShouldParseSelfClosingElementWithThreeAttributes);
+	CPPUNIT_TEST(ShouldParseElementWithOnlyTextContent);
+	CPPUNIT_TEST(ShouldConcatAllTextInsideElement);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -202,5 +204,32 @@ public:
 		CPPUNIT_ASSERT_EQUAL((string)"value 1", result->attribute("attr1"));
 		CPPUNIT_ASSERT_EQUAL((string)"value 2", result->attribute("attr2"));
 		CPPUNIT_ASSERT_EQUAL((string)"value 3", result->attribute("attr3"));
+	}
+
+	virtual void ShouldParseElementWithOnlyTextContent()
+	{
+		// arrange
+		string input = "<root>some text in here</root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT(result != nullptr);
+		CPPUNIT_ASSERT_EQUAL((string)"some text in here", result->content);
+	}
+
+	virtual void ShouldConcatAllTextInsideElement()
+	{
+		// arrange
+		string input = "<root>1234<child></child>5678<a></a>xxxx</root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT(result != nullptr);
+		CPPUNIT_ASSERT_EQUAL((string)"12345678xxxx", result->content);
+		CPPUNIT_ASSERT_EQUAL(2, result->childrenCount());
 	}
 };

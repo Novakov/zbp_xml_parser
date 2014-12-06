@@ -203,17 +203,49 @@ private:
 		return true;
 	}
 
+	bool text(char c, shared_ptr<Element> * parent)
+	{
+		bool any = false;
+
+		while (c != '<')
+		{
+			any = true;
+			(*parent)->content += c;
+
+			this->next();
+			c = this->peek();
+		}
+
+		return any;
+	}
+
+	bool elementContent(char c, shared_ptr<Element> * parent)
+	{
+		shared_ptr<Element> child = nullptr;
+		if (test(&XmlGrammar::element, &child))
+		{
+			(*parent)->addChild(child);
+			return true;
+		}
+
+		if (test(&XmlGrammar::text, parent))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	bool fullElement(char c, shared_ptr<Element> * result)
 	{
 		string tagName;
 
 		if (!test(&XmlGrammar::startTag, result))		
 			return false;			
-
-		shared_ptr<Element> child = nullptr;
-		while (test(&XmlGrammar::element, &child))
+		
+		while (test(&XmlGrammar::elementContent, result))
 		{
-			(*result)->addChild(child);
+			
 		}
 
 		if (!test(&XmlGrammar::endTag, &tagName))

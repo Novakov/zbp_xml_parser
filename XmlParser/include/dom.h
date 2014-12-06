@@ -9,6 +9,8 @@ private:
 	std::vector<std::shared_ptr<Element>> children;
 	std::map<std::string, std::string> attributes;
 public:
+	std::string content;
+
 	Element(const std::string name) : _name(name)
 	{}
 
