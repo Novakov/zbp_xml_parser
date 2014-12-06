@@ -20,6 +20,8 @@ class ParserTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(ShouldParseThreeLevelStructure);
 	CPPUNIT_TEST(ShouldParseSelfClosingElement);
 	CPPUNIT_TEST(ShouldParseElementsWithMixedFullAndSelfClosedElements);
+	CPPUNIT_TEST(ShouldParseElementWithOneAttribute);
+	CPPUNIT_TEST(ShouldParseElementWithThreeAttributes);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -54,7 +56,7 @@ public:
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"element", result->name());
 	}
-	
+
 	virtual void ShouldParseSingleElementWithOneNestedElement()
 	{
 		// arrange
@@ -67,7 +69,7 @@ public:
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
 		CPPUNIT_ASSERT_EQUAL(1, result->childrenCount());
-		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());		
+		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
 	}
 
 	virtual void ShouldParseSingleElementWithTwoNestedElements()
@@ -134,5 +136,37 @@ public:
 		CPPUNIT_ASSERT_EQUAL((string)"c", result->child(2)->name());
 		CPPUNIT_ASSERT_EQUAL(1, result->child(2)->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"d", result->child(2)->child(0)->name());
+	}
+
+	virtual void ShouldParseElementWithOneAttribute()
+	{
+		// arrange
+		string input = "<root attribute=\"value with spaces\"></root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT(result != nullptr);
+		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
+		CPPUNIT_ASSERT_EQUAL(1, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((string)"value with spaces", result->attribute("attribute"));
+	}
+
+	virtual void ShouldParseElementWithThreeAttributes()
+	{
+		// arrange
+		string input = "<root attr1=\"value 1\" attr2=\"value 2\" attr3=\"value 3\"></root>";
+
+		// act
+		auto result = parse(input);
+
+		// assert
+		CPPUNIT_ASSERT(result != nullptr);
+		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
+		CPPUNIT_ASSERT_EQUAL(3, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((string)"value 1", result->attribute("attr1"));
+		CPPUNIT_ASSERT_EQUAL((string)"value 2", result->attribute("attr2"));
+		CPPUNIT_ASSERT_EQUAL((string)"value 3", result->attribute("attr3"));
 	}
 };

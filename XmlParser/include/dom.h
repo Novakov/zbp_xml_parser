@@ -1,5 +1,5 @@
 #include <string>
-
+#include <map>
 #include <vector>
 
 class Element
@@ -7,6 +7,7 @@ class Element
 private:
 	std::string _name;
 	std::vector<std::shared_ptr<Element>> children;
+	std::map<std::string, std::string> attributes;
 public:
 	Element(const std::string name) : _name(name)
 	{}
@@ -16,4 +17,8 @@ public:
 	void addChild(std::shared_ptr<Element> child);
 	int childrenCount();
 	std::shared_ptr<Element> child(int index);
+
+	void setAttribute(std::string name, std::string value);
+	int attributeCount();
+	std::string attribute(std::string name);	
 };

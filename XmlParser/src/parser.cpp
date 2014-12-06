@@ -61,6 +61,22 @@ protected:
 		}
 		return false;
 	}
+
+	bool skipWhiteSpace(bool required = false)
+	{
+		char c = this->peek();
+
+		while (c == ' ')
+		{
+			required = false;
+
+			this->next();
+			c = this->peek();
+		}
+
+		return !required;
+	}
+
 public:
 	bool Grammar::isValid(istream &input, TRootResult * result)
 	{
@@ -80,10 +96,16 @@ public:
 class XmlGrammar : public Grammar < XmlGrammar, shared_ptr<Element> >
 {
 private:
+	bool isNameChar(char c)
+	{
+		return ('a' <= c && c <= 'z')
+			|| ('0' <= c && c <= '9');
+	}
+
 	bool name(char c, string * s)
 	{
 		*s = "";
-		while ('a' <= c && c <= 'z')
+		while (isNameChar(c))
 		{
 			*s += c;
 			this->next();
@@ -93,13 +115,70 @@ private:
 		return s->length() > 0;
 	}
 
-	bool startTag(char c, string * tagName)
+	bool attributeValue(char c, string * result)
+	{
+		*result = "";
+
+		while (c != '"')
+		{
+			*result += c;
+
+			this->next();
+
+			c = this->peek();
+		}
+
+		return true;
+	}
+
+	bool attribute(char c, pair<string, string> * result)
+	{
+		string attributeName;
+		string value;
+
+		if (!test(&XmlGrammar::name, &attributeName))
+			return false;
+
+		if (!parseChar('='))
+			return false;
+
+		if (!parseChar('"'))
+			return false;
+
+		if (!test(&XmlGrammar::attributeValue, &value))
+			return false;
+
+		if (!parseChar('"'))
+			return false;
+
+		*result = make_pair(attributeName, value);
+
+		return true;
+	}
+
+	bool startTag(char c, shared_ptr<Element> * element)
 	{
 		if (!parseChar('<'))
 			return false;
 
-		if (!test(&XmlGrammar::name, tagName))
+		string tagName = "";
+
+		if (!test(&XmlGrammar::name, &tagName))
 			return false;
+
+		*element = make_shared<Element>(tagName);
+
+		skipWhiteSpace();
+
+		pair<string, string> attribute;
+
+		while (test(&XmlGrammar::attribute, &attribute))
+		{
+			(*element)->setAttribute(attribute.first, attribute.second);
+
+			if (!skipWhiteSpace(true))
+				break;
+		}
 
 		if (!parseChar('>'))
 			return false;
@@ -128,10 +207,8 @@ private:
 	{
 		string tagName;
 
-		if (!test(&XmlGrammar::startTag, &tagName))		
-			return false;		
-
-		*result = make_shared<Element>(tagName);
+		if (!test(&XmlGrammar::startTag, result))		
+			return false;			
 
 		shared_ptr<Element> child = nullptr;
 		while (test(&XmlGrammar::element, &child))
