@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <memory>
 
 class Element
 {
@@ -36,5 +37,7 @@ public:
 
 	Element::AttributesIterator attributesBegin();
 	Element::AttributesIterator attributesEnd();
+
+	friend std::ostream& operator<<(std::ostream& output, const std::shared_ptr<Element> element);
 };
 

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{8D567681-C063-4B06-BF8B-658A82B7F20B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlParser", "XmlParser\XmlParser.vcxproj", "{0CF3C49A-5B66-445C-A76D-3AD6B2CE21B8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Writer", "Writer\Writer.vcxproj", "{755B2800-EEE9-411D-B0D6-0BF3EA24F022}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0CF3C49A-5B66-445C-A76D-3AD6B2CE21B8}.Debug|Win32.Build.0 = Debug|Win32
 		{0CF3C49A-5B66-445C-A76D-3AD6B2CE21B8}.Release|Win32.ActiveCfg = Release|Win32
 		{0CF3C49A-5B66-445C-A76D-3AD6B2CE21B8}.Release|Win32.Build.0 = Release|Win32
+		{755B2800-EEE9-411D-B0D6-0BF3EA24F022}.Debug|Win32.ActiveCfg = Debug|Win32
+		{755B2800-EEE9-411D-B0D6-0BF3EA24F022}.Debug|Win32.Build.0 = Debug|Win32
+		{755B2800-EEE9-411D-B0D6-0BF3EA24F022}.Release|Win32.ActiveCfg = Release|Win32
+		{755B2800-EEE9-411D-B0D6-0BF3EA24F022}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

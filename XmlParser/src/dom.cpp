@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include<memory>
+#include <memory>
 
 #include "dom.h"
+#include "Writer.h"
 
 using namespace std;
 
@@ -59,4 +60,13 @@ Element::AttributesIterator Element::attributesBegin()
 Element::AttributesIterator Element::attributesEnd()
 {
 	return this->attributes.end();
+}
+
+std::ostream& operator<<(std::ostream& output, const std::shared_ptr<Element> element)
+{
+	XmlWriter writer;
+
+	writer.write(element, output);
+
+	return output;
 }
