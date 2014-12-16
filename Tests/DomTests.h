@@ -16,6 +16,7 @@ class DomTest : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(DomTest);
 	CPPUNIT_TEST(ShouldIterateOverAllChildren);
 	CPPUNIT_TEST(ShouldIterateOverAllAttributes);
+	CPPUNIT_TEST(ShouldRemoveElement);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -75,5 +76,20 @@ public:
 		it++;
 
 		CPPUNIT_ASSERT(root->attributesEnd() == it);
+	}
+
+	virtual void ShouldRemoveElement()
+	{
+		// arrange
+		auto root = Element::create("root");
+		auto child = Element::create("child");
+		root->addChild(child);
+
+		// act		
+		root->removeChild(0);
+
+		// assert
+		CPPUNIT_ASSERT(root->childrenEnd() == root->childrenBegin());
+
 	}
 };

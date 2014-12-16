@@ -26,6 +26,11 @@ shared_ptr<Element> Element::child(int index)
 	return this->children.at(index);
 }
 
+void Element::removeChild(int index)
+{
+	this->children.erase(this->children.begin() + index);
+}
+
 int Element::attributeCount()
 {
 	return this->attributes.size();

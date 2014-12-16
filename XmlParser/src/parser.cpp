@@ -97,9 +97,11 @@ class XmlGrammar : public Grammar < XmlGrammar, shared_ptr<Element> >
 {
 private:
 	bool isNameChar(char c)
-	{
-		return ('a' <= c && c <= 'z')
-			|| ('0' <= c && c <= '9');
+	{		
+		return c != '\n' && c != '\r' && c != '\t' && c != ' '
+			&& c != '<' && c != '>' && c != '=' 
+			&& c != '/'
+			&& c != EOF;
 	}
 
 	bool name(char c, string * s)

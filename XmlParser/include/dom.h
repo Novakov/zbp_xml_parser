@@ -27,6 +27,7 @@ public:
 	void addChild(std::shared_ptr<Element> child);
 	int childrenCount();
 	std::shared_ptr<Element> child(int index);
+	void removeChild(int index);
 
 	void setAttribute(std::string name, std::string value);
 	int attributeCount();
