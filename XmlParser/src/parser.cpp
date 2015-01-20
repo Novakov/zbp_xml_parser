@@ -314,13 +314,13 @@ protected:
 	bool root(char c, shared_ptr<Element> * result) { return this->element(c, result); }
 };
 
-std::shared_ptr<Element> Parser::parse(std::istream * input)
+std::shared_ptr<Element> Parser::parse(std::istream& input)
 {
 	shared_ptr<Element> result = nullptr;
 
 	XmlGrammar grammar;
 
-	if (grammar.isValid(*input, &result))
+	if (grammar.isValid(input, &result))
 	{		
 		return result;
 	}

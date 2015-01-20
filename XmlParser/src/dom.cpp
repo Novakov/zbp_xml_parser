@@ -16,22 +16,23 @@ void Element::addChild(shared_ptr<Element> child)
 	this->children.push_back(child);
 }
 
-int Element::childrenCount()
+size_t Element::childrenCount()
 {
 	return this->children.size();
 }
 
-shared_ptr<Element> Element::child(int index)
+shared_ptr<Element> Element::child(size_t index)
 {
 	return this->children.at(index);
 }
 
-void Element::removeChild(int index)
+
+void Element::removeChild(size_t index)
 {
 	this->children.erase(this->children.begin() + index);
 }
 
-int Element::attributeCount()
+size_t Element::attributeCount()
 {
 	return this->attributes.size();
 }
@@ -40,7 +41,6 @@ string Element::attribute(string name)
 {
 	return this->attributes.at(name);
 }
-
 
 void Element::setAttribute(std::string name, std::string value)
 {

@@ -25,12 +25,12 @@ public:
 	std::string name() { return this->_name; }
 
 	void addChild(std::shared_ptr<Element> child);
-	int childrenCount();
-	std::shared_ptr<Element> child(int index);
-	void removeChild(int index);
+	size_t childrenCount();
+	std::shared_ptr<Element> child(size_t index);
+	void removeChild(size_t index);
 
 	void setAttribute(std::string name, std::string value);
-	int attributeCount();
+	size_t attributeCount();
 	std::string attribute(std::string name);	
 	
 	Element::ChildrenIterator childrenBegin();

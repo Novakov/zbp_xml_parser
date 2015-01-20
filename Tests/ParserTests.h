@@ -34,7 +34,7 @@ private:
 	{
 		stringstream stream(input);
 
-		return this->parser->parse(&stream);
+		return this->parser->parse(stream);
 	}
 public:
 	void setUp()
@@ -71,7 +71,7 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(1, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)1, result->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
 	}
 
@@ -86,7 +86,7 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(2, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)2, result->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
 		CPPUNIT_ASSERT_EQUAL((string)"b", result->child(1)->name());
 	}
@@ -102,7 +102,7 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(3, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)3, result->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
 		CPPUNIT_ASSERT_EQUAL((string)"b", result->child(1)->name());
 		CPPUNIT_ASSERT_EQUAL((string)"d", result->child(2)->name());
@@ -133,11 +133,11 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(3, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)3, result->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"a", result->child(0)->name());
 		CPPUNIT_ASSERT_EQUAL((string)"b", result->child(1)->name());
 		CPPUNIT_ASSERT_EQUAL((string)"c", result->child(2)->name());
-		CPPUNIT_ASSERT_EQUAL(1, result->child(2)->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)1, result->child(2)->childrenCount());
 		CPPUNIT_ASSERT_EQUAL((string)"d", result->child(2)->child(0)->name());
 	}
 
@@ -152,7 +152,7 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(1, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)1, result->attributeCount());
 		CPPUNIT_ASSERT_EQUAL((string)"value with spaces", result->attribute("attribute"));
 	}
 
@@ -167,7 +167,7 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(3, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)3, result->attributeCount());
 		CPPUNIT_ASSERT_EQUAL((string)"value 1", result->attribute("attr1"));
 		CPPUNIT_ASSERT_EQUAL((string)"value 2", result->attribute("attr2"));
 		CPPUNIT_ASSERT_EQUAL((string)"value 3", result->attribute("attr3"));
@@ -184,7 +184,7 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(1, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)1, result->attributeCount());
 		CPPUNIT_ASSERT_EQUAL((string)"value with spaces", result->attribute("attribute"));
 	}
 
@@ -199,7 +199,7 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"root", result->name());
-		CPPUNIT_ASSERT_EQUAL(3, result->attributeCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)3, result->attributeCount());
 		CPPUNIT_ASSERT_EQUAL((string)"value 1", result->attribute("attr1"));
 		CPPUNIT_ASSERT_EQUAL((string)"value 2", result->attribute("attr2"));
 		CPPUNIT_ASSERT_EQUAL((string)"value 3", result->attribute("attr3"));
@@ -229,6 +229,6 @@ public:
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
 		CPPUNIT_ASSERT_EQUAL((string)"12345678xxxx", result->content);
-		CPPUNIT_ASSERT_EQUAL(2, result->childrenCount());
+		CPPUNIT_ASSERT_EQUAL((size_t)2, result->childrenCount());
 	}
 };

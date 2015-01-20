@@ -15,5 +15,5 @@ class invalid_token_exception : public std::exception
 class Parser
 {
 public:
-	std::shared_ptr<Element> parse(std::istream * input);
+	std::shared_ptr<Element> parse(std::istream& input);
 };

@@ -51,7 +51,7 @@ public:
 		ss << root;
 		Parser parser;
 		
-		auto result = parser.parse(&ss);
+		auto result = parser.parse(ss);
 
 		// assert
 		CPPUNIT_ASSERT(result != nullptr);
